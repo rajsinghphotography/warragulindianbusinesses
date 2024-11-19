@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country Town Business Directory</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group input[type="file"] {
+            border: none;
+        }
+        .btn {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #555;
+        }
+        .business-list {
+            margin-top: 20px;
+        }
+        .business-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .business-item img {
+            max-width: 100px;
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Country Town Business Directory</h1>
+</header>
+<div class="container">
+    <h2>Submit Your Business</h2>
+    <form id="businessForm">
+        <div class="form-group">
+            <label for="name">Business Name</label>
+            <input type="text" id="name" required>
+        </div>
+        <div class="form-group">
+            <label for="owner">Owner Name</label>
+            <input type="text" id="owner" required>
+        </div>
+        <div class="form-group">
+            <label for="contact">Contact Number</label>
+            <input type="text" id="contact" required>
+        </div>
+        <div class="form-group">
+            <label for="address">Business Address</label>
+            <input type="text" id="address" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Business Description</label>
+            <textarea id="description" rows="4" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="logo">Business Logo</label>
+            <input type="file" id="logo">
+        </div>
+        <div class="form-group">
+            <label for="cover">Cover Image</label>
+            <input type="file" id="cover">
+        </div>
+        <button type="submit" class="btn">Submit</button>
+    </form>
+
+    <h2>Business Listings</h2>
+    <div id="businessList" class="business-list"></div>
+</div>
+
+<script>
+    const businessForm = document.getElementById('businessForm');
+    const businessList = document.getElementById('businessList');
+
+    // Load businesses from local storage
+    const loadBusinesses = () => {
+        const businesses = JSON.parse(localStorage.getItem('businesses')) || [];
+        businessList.innerHTML = '';
+        businesses.forEach((business) => {
+            const div = document.createElement('div');
+            div.className = 'business-item';
+            div.innerHTML = `
+                <h3>${business.name}</h3>
+                <p><strong>Owner:</strong> ${business.owner}</p>
+                <p><strong>Contact:</strong> ${business.contact}</p>
+                <p><strong>Address:</strong> ${business.address}</p>
+                <p>${business.description}</p>
+            `;
+            businessList.appendChild(div);
+        });
+    };
+
+    // Save a new business
+    businessForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const newBusiness = {
+            name: document.getElementById('name').value,
+            owner: document.getElementById('owner').value,
+            contact: document.getElementById('contact').value,
+            address: document.getElementById('address').value,
+            description: document.getElementById('description').value,
+        };
+
+        const businesses = JSON.parse(localStorage.getItem('businesses')) || [];
+        businesses.push(newBusiness);
+        localStorage.setItem('businesses', JSON.stringify(businesses));
+
+        businessForm.reset();
+        loadBusinesses();
+    });
+
+    // Initial load
+    loadBusinesses();
+</script>
+</body>
+</html>
